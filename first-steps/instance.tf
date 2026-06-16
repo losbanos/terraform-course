@@ -2,21 +2,24 @@ provider "aws" {
   profile = "bong9kim"
 }
 
-data "aws_ami" "amazon_linux" {
+data "aws_ami" "ubuntu" {
   most_recent = true
-  owners      = ["amazon"]
+  owners      = ["099720109477"]
 
   filter {
     name   = "name"
-    values = ["al2023-ami-*-x86_64"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
 }
 
-resource "aws_instance" "example" {
-  ami           = data.aws_ami.amazon_linux.id
-  instance_type = "t3.micro"
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type.example
+
+  subnet_id = module.vpc.public_subnets[0]
+
   tags = {
-    Name = "example"
+    Name = "web"
   }
 }
 
